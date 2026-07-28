@@ -5,12 +5,12 @@ import { useRouter } from "next/navigation";
 import { Product, ProductInput } from "@/lib/types";
 
 const CATEGORIAS_SUGERIDAS = [
-  "Decoração",
-  "Iluminação",
-  "Têxtil",
-  "Mesa Posta",
-  "Organização",
-  "Geral"
+  "Setup e Gadgets",
+  "Presentes Criativos",
+  "Decoração para Quarto",
+  "Decoração para Sala",
+  "Utilidades para Casa ✨",
+  "Mamãe e Bebê"
 ];
 
 export default function ProductForm({ produto }: { produto?: Product }) {
@@ -18,7 +18,7 @@ export default function ProductForm({ produto }: { produto?: Product }) {
   const [form, setForm] = useState<ProductInput>({
     titulo: produto?.titulo || "",
     descricao: produto?.descricao || "",
-    categoria: produto?.categoria || "Decoração",
+    categoria: produto?.categoria || "Setup e Gadgets",
     precoExibicao: produto?.precoExibicao || "",
     imagem: produto?.imagem || "",
     imagens: produto?.imagens || [],
