@@ -1,9 +1,12 @@
 import Link from "next/link";
-import { listProducts } from "@/lib/db";
+import { listProducts, getCategorias } from "@/lib/db";
 import InventoryTable from "./InventoryTable";
 
 export default async function InventarioPage() {
-  const produtos = await listProducts({});
+  const [produtos, categorias] = await Promise.all([
+    listProducts({}),
+    getCategorias()
+  ]);
 
   return (
     <div>
@@ -23,7 +26,7 @@ export default async function InventarioPage() {
       </div>
 
       <div className="mt-6">
-        <InventoryTable itensIniciais={produtos} />
+        <InventoryTable itensIniciais={produtos} categoriasIniciais={categorias} />
       </div>
     </div>
   );

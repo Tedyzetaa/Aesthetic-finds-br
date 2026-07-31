@@ -13,8 +13,22 @@ const CATEGORIAS_SUGERIDAS = [
   "Mamãe e Bebê"
 ];
 
-export default function ProductForm({ produto }: { produto?: Product }) {
+export default function ProductForm({
+  produto,
+  categoriasExistentes = []
+}: {
+  produto?: Product;
+  categoriasExistentes?: string[];
+}) {
   const router = useRouter();
+
+  // Junta as categorias já cadastradas no banco com as sugestões padrão,
+  // para reforçar o uso consistente de nomes e evitar duplicidade
+  // (ex: "Decoração" vs "decoracao").
+  const categoriasDisponiveis = Array.from(
+    new Set([...categoriasExistentes, ...CATEGORIAS_SUGERIDAS])
+  ).sort((a, b) => a.localeCompare(b, "pt-BR"));
+
   const [form, setForm] = useState<ProductInput>({
     titulo: produto?.titulo || "",
     descricao: produto?.descricao || "",
@@ -110,7 +124,7 @@ export default function ProductForm({ produto }: { produto?: Product }) {
             className="focus-ring w-full rounded-lg border border-line px-3 py-2 text-sm"
           />
           <datalist id="categorias-sugeridas">
-            {CATEGORIAS_SUGERIDAS.map((c) => (
+            {categoriasDisponiveis.map((c) => (
               <option key={c} value={c} />
             ))}
           </datalist>
