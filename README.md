@@ -118,16 +118,67 @@ menu simplificado abaixo de `md`.
 
 Como os dados agora vivem no Supabase (não mais em arquivo local), a
 aplicação é stateless e roda em qualquer hospedagem, inclusive serverless
-(Vercel, Render, EC2 etc.) — basta configurar as variáveis de ambiente
-(`SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`, `ADMIN_JWT_SECRET`,
-`ADMIN_EMAIL`, `ADMIN_PASSWORD_HASH`) no provedor escolhido.
+(Vercel, Render, EC2 etc.) — basta configurar as variáveis de ambiente no
+provedor escolhido.
 
-**Vercel:** importe o repositório, adicione as variáveis de ambiente no
-painel do projeto e faça o deploy — sem passos extras.
+### Migrando do Render para a Vercel
 
-**Render (Web Service) ou AWS EC2:** build command `npm install && npm run
-build`, start command `npm start`, configurar as mesmas variáveis de
-ambiente. Não é mais necessário disco persistente.
+1. **Suba o código para o GitHub** (se ainda não estiver lá) — a Vercel
+   faz deploy a partir de um repositório Git.
+2. Em [vercel.com](https://vercel.com), **Add New → Project** e importe o
+   repositório. A Vercel detecta o Next.js automaticamente (build command
+   `next build`, output gerenciado por ela — não precisa mexer em nada).
+3. Na tela de configuração, abra **Environment Variables** e adicione:
+   - `SUPABASE_URL`
+   - `SUPABASE_SERVICE_ROLE_KEY`
+   - `ADMIN_JWT_SECRET`
+   - `ADMIN_EMAIL`
+   - `ADMIN_PASSWORD_HASH`
+   - (opcional) `NEXT_PUBLIC_AADS_UNIT_HOME_TOP`,
+     `NEXT_PUBLIC_AADS_UNIT_HOME_INFEED`, `NEXT_PUBLIC_AADS_UNIT_PRODUTO`
+     — ver seção "Anúncios (A-ADS)" abaixo.
+   Use os mesmos valores que estavam configurados no Render.
+4. Clique em **Deploy**. Em ~1-2 minutos você tem uma URL `*.vercel.app`
+   funcionando, com o mesmo Supabase por trás — nenhum dado é migrado ou
+   duplicado, é o mesmo banco.
+5. **Domínio próprio:** em Project Settings → Domains, adicione seu
+   domínio e aponte o DNS (A/CNAME) conforme instruído pela Vercel.
+6. Teste tudo na URL da Vercel (vitrine, busca, login admin, CRUD de
+   produtos) antes de trocar o DNS definitivo.
+7. Só desligue o serviço no Render depois de confirmar que a Vercel está
+   estável e o domínio já está resolvendo para lá.
+
+Nenhum passo aqui migra dados — o Supabase (Postgres + Storage) continua
+sendo a mesma fonte de dados, então a troca de host é só sobre onde o
+Next.js roda.
+
+**Render (Web Service) ou AWS EC2 (alternativas):** build command
+`npm install && npm run build`, start command `npm start`, configurar as
+mesmas variáveis de ambiente. Não é necessário disco persistente.
+
+## Anúncios (A-ADS)
+
+O projeto tem um componente `components/AdBanner.tsx` pronto para exibir
+unidades de anúncio da [A-ADS](https://a-ads.com/), posicionado em três
+lugares: topo da home (abaixo do hero), meio da grade de produtos (in-feed)
+e na página de produto (abaixo do CTA "Ver na loja").
+
+1. Crie uma conta em [a-ads.com](https://a-ads.com/) e cadastre seu site.
+2. Para cada posição desejada, crie uma "unidade de anúncio" no painel da
+   A-ADS e copie o ID numérico (o `data-aa="ID"` do código que eles geram).
+3. Cole os IDs nas variáveis de ambiente correspondentes (local: `.env.local`;
+   produção: painel da Vercel → Environment Variables):
+   - `NEXT_PUBLIC_AADS_UNIT_HOME_TOP` — banner 728×90 no topo da home
+   - `NEXT_PUBLIC_AADS_UNIT_HOME_INFEED` — banner 468×60 ao final da grade
+   - `NEXT_PUBLIC_AADS_UNIT_PRODUTO` — banner 728×90 na página de produto
+4. Redeploy (a Vercel redeploya automaticamente ao salvar novas env vars,
+   ou clique em "Redeploy" manualmente).
+
+Qualquer variável deixada em branco simplesmente não renderiza aquele
+bloco — não há iframe vazio nem quebra de layout. Como as env vars usadas
+aqui começam com `NEXT_PUBLIC_`, elas ficam visíveis no navegador (é assim
+que o Next.js expõe valores para o client) — isso é esperado e seguro,
+pois são apenas IDs de unidade de anúncio, não segredos.
 
 ## Evoluindo o projeto
 
