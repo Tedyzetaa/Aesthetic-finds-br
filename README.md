@@ -161,7 +161,13 @@ mesmas variáveis de ambiente. Não é necessário disco persistente.
 O projeto tem um componente `components/AdBanner.tsx` pronto para exibir
 unidades de anúncio da [A-ADS](https://a-ads.com/), posicionado em três
 lugares: topo da home (abaixo do hero), meio da grade de produtos (in-feed)
-e na página de produto (abaixo do CTA "Ver na loja").
+e na página de produto (abaixo do CTA "Ver na loja"). Há também dois
+componentes para os formatos "sticky" da A-ADS, que são globais por
+natureza (flutuam por cima do conteúdo, não ocupam espaço no grid) e ficam
+plugados em `app/layout.tsx`, aparecendo em **todas as páginas do site**:
+`components/StickyAdBanner.tsx` (fixo no rodapé) e
+`components/SideAdBanner.tsx` (fixo nas laterais, um componente reutilizado
+pros dois lados; escondido no mobile para não tampar o conteúdo).
 
 1. Crie uma conta em [a-ads.com](https://a-ads.com/) e cadastre seu site.
 2. Para cada posição desejada, crie uma "unidade de anúncio" no painel da
@@ -171,6 +177,10 @@ e na página de produto (abaixo do CTA "Ver na loja").
    - `NEXT_PUBLIC_AADS_UNIT_HOME_TOP` — banner 728×90 no topo da home
    - `NEXT_PUBLIC_AADS_UNIT_HOME_INFEED` — banner 468×60 ao final da grade
    - `NEXT_PUBLIC_AADS_UNIT_PRODUTO` — banner 728×90 na página de produto
+   - `NEXT_PUBLIC_AADS_UNIT_STICKY` — unidade sticky/adaptável, aparece
+     fixa no rodapé em todo o site
+   - `NEXT_PUBLIC_AADS_UNIT_SIDE_LEFT` / `NEXT_PUBLIC_AADS_UNIT_SIDE_RIGHT`
+     — unidades sticky nas laterais, escondidas no mobile
 4. Redeploy (a Vercel redeploya automaticamente ao salvar novas env vars,
    ou clique em "Redeploy" manualmente).
 
