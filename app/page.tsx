@@ -5,8 +5,12 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import SearchBar from "@/components/SearchBar";
 import ProductCard from "@/components/ProductCard";
+import AdBanner from "@/components/AdBanner";
 import { ProductGridSkeleton } from "@/components/Skeleton";
 import { Product } from "@/lib/types";
+
+const AADS_UNIT_HOME_TOP = process.env.NEXT_PUBLIC_AADS_UNIT_HOME_TOP;
+const AADS_UNIT_HOME_INFEED = process.env.NEXT_PUBLIC_AADS_UNIT_HOME_INFEED;
 
 export default function HomePage() {
   const [produtos, setProdutos] = useState<Product[]>([]);
@@ -98,6 +102,12 @@ export default function HomePage() {
         </div>
       </section>
 
+      {AADS_UNIT_HOME_TOP && (
+        <div className="mx-auto max-w-6xl px-5 pt-10 md:px-8">
+          <AdBanner unitId={AADS_UNIT_HOME_TOP} width={728} height={90} />
+        </div>
+      )}
+
       {/* Coleção */}
       <section id="colecao" className="mx-auto max-w-6xl px-5 py-14 md:px-8">
         <div id="categorias" className="mb-8">
@@ -120,6 +130,12 @@ export default function HomePage() {
             {produtos.map((p) => (
               <ProductCard key={p.id} produto={p} />
             ))}
+          </div>
+        )}
+
+        {AADS_UNIT_HOME_INFEED && (
+          <div className="mt-14 flex justify-center">
+            <AdBanner unitId={AADS_UNIT_HOME_INFEED} width={468} height={60} />
           </div>
         )}
       </section>

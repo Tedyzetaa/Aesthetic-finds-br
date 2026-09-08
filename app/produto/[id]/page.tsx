@@ -3,6 +3,9 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { getProduct, listProducts } from "@/lib/db";
 import ProductCard from "@/components/ProductCard";
+import AdBanner from "@/components/AdBanner";
+
+const AADS_UNIT_PRODUTO = process.env.NEXT_PUBLIC_AADS_UNIT_PRODUTO;
 
 export default async function ProdutoPage({ params }: { params: { id: string } }) {
   const produto = await getProduct(params.id);
@@ -63,6 +66,12 @@ export default async function ProdutoPage({ params }: { params: { id: string } }
             </p>
           </div>
         </div>
+
+        {AADS_UNIT_PRODUTO && (
+          <div className="mt-14 flex justify-center">
+            <AdBanner unitId={AADS_UNIT_PRODUTO} width={728} height={90} />
+          </div>
+        )}
 
         {relacionados.length > 0 && (
           <div className="mt-20">
